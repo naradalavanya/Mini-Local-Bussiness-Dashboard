@@ -71,28 +71,3 @@ This project consists of a **backend** (Node.js/Express) and a **frontend** (Rea
 
 ---
 
-## Project Structure
-```
-Growth Pro_Project/
-  backend/
-    package.json
-    server.js
-    ...
-  frontend/
-    package.json
-    public/
-      index.html
-    src/
-      App.jsx
-      index.js
-      index.css
-      components/
-        BusinessForm.jsx
-        BusinessDisplayCard.jsx
-    ...
-```
-
----
-
-## Contact
-For questions or issues, please open an issue or contact the maintainer. 
