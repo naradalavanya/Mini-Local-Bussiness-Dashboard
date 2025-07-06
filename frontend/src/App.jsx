@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import BusinessForm from './components/BusinessForm';
 import BusinessDisplayCard from './components/BusinessDisplayCard';
+import { fetchBusinessData, regenerateHeadline } from './api';
 
-// Main App component
+// Main App component - Updated for Netlify deployment
 const App = () => {
     // State for form inputs
     const [businessName, setBusinessName] = useState('');
@@ -18,8 +19,7 @@ const App = () => {
     // State for error messages
     const [error, setError] = useState('');
 
-    // Base URL for the backend API
-    const API_BASE_URL = 'http://localhost:3001';
+    // API functions are imported from api.js
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -35,21 +35,9 @@ const App = () => {
         setBusinessData(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/business-data`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: businessName, location: location }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to fetch business data.');
-            }
-
-            const data = await response.json();
+            const data = await fetchBusinessData(businessName, location);
             setBusinessData(data);
+            console.log('Business data set in state:', data);
         } catch (err) {
             console.error('Error fetching business data:', err);
             setError(err.message || 'An unexpected error occurred. Please try again.');
@@ -64,14 +52,7 @@ const App = () => {
         setIsRegeneratingHeadline(true);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/regenerate-headline?name=${encodeURIComponent(businessName)}&location=${encodeURIComponent(location)}`);
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to regenerate headline.');
-            }
-
-            const data = await response.json();
+            const data = await regenerateHeadline(businessName, location);
             setBusinessData(prevData => ({
                 ...prevData,
                 seoHeadline: data.seoHeadline,
