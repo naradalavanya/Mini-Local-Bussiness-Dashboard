@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Netlify Functions Test</h1>
+    
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testBusinessData()">Test Business Data</button>
+    <button onclick="testRegenerateHeadline()">Test Headline Regeneration</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function testHealth() {
+            try {
+                console.log('Testing health endpoint...');
+                const response = await fetch('/.netlify/functions/health');
+                console.log('Health response status:', response.status);
+                const data = await response.json();
+                document.getElementById('results').innerHTML = `
+                    <h3>Health Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Health test error:', error);
+                document.getElementById('results').innerHTML = `
+                    <h3>Health Test Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testBusinessData() {
+            try {
+                console.log('Testing business data endpoint...');
+                const response = await fetch('/.netlify/functions/business-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: 'Test Business', location: 'Test City' })
+                });
+                console.log('Business data response status:', response.status);
+                const data = await response.json();
+                document.getElementById('results').innerHTML = `
+                    <h3>Business Data Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Business data test error:', error);
+                document.getElementById('results').innerHTML = `
+                    <h3>Business Data Test Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testRegenerateHeadline() {
+            try {
+                console.log('Testing headline regeneration...');
+                const response = await fetch('/.netlify/functions/business-data?name=Test&location=City');
+                console.log('Headline response status:', response.status);
+                const data = await response.json();
+                document.getElementById('results').innerHTML = `
+                    <h3>Headline Regeneration Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Headline test error:', error);
+                document.getElementById('results').innerHTML = `
+                    <h3>Headline Test Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
