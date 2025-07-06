@@ -2,11 +2,23 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3001; // You can choose any port
+const port = process.env.PORT || 3001; // Use environment variable for port
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+app.use(cors(corsOptions)); // Enable CORS with options
 app.use(express.json()); // To parse JSON request bodies
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 
 // Simulated SEO headline templates with placeholders
 const seoHeadlineTemplates = [
